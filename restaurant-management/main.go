@@ -27,7 +27,7 @@ func main() {
 	routes.FoodRoutes(router)
 	routes.InvoiceRoutes(router)
 	routes.MenuRoutes(router)
-	routes.OrderIteMRoutes(router)
+	routes.OrderItemRoutes(router)
 	routes.OrderRoutes(router)
 	routes.TableRoutes(router)
 
