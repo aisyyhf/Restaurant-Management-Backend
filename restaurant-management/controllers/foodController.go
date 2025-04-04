@@ -1,6 +1,16 @@
 package controller
 
-import "github.com/gin-gonic/gin"
+import (
+	"context"
+	"golang-restaurant-management/database"
+	"golang-restaurant-management/models"
+	"time"
+
+	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/mongo"
+)
+
+	var foodCollection *mongo.Collection = database.OpenCollection(database.Client, "food")
 
 func GetFoods() gin.HandlerFunc {
 	return func(c *gin.Context){
@@ -10,7 +20,16 @@ func GetFoods() gin.HandlerFunc {
 
 func GetFood() gin.HandlerFunc {
     return func(c *gin.Context){
+		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+		foodId := c.Param("food_id")
+		var food models.Food
 
+		foodCollection.Findone(ctx, bson.M{"food_id": foodId}).Decode(&food)
+		defer cancel()
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": " error occured while fetching the food item"})
+		}
+		c.JSON(http.StatusOK, food)
     }
 }
 
